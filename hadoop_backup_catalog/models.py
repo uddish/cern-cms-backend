@@ -24,3 +24,14 @@ class metadata(models.Model):
 
     def __str__(self):
         return self.namenode
+
+class backupsets(models.Model):
+    appid = models.IntegerField()
+    boid = models.IntegerField()
+    bsid = models.IntegerField()
+    backupset_name = models.CharField(max_length=256)
+    status = models.CharField(max_length=24)
+    num_files = models.IntegerField()
+
+    def __str__(self):
+        return self.appid
