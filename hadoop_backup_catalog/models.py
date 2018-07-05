@@ -1,7 +1,7 @@
 from django.db import models
 from mysite.settings import DATE_INPUT_FORMATS
 
-# add meta class to change the table's name
+# TODO add meta class to change the table's name
 class applications(models.Model):
     appid = models.IntegerField()
     appname = models.CharField(max_length=50)
@@ -18,7 +18,7 @@ class applications(models.Model):
         return self.appname
 
 
-# add meta class to change the table's name
+# TODO add meta class to change the table's name
 class metadata(models.Model):
     hdfs_cluster = models.CharField(max_length=50)
     backupqueue = models.CharField(max_length=50)
@@ -81,21 +81,22 @@ class backupfile_exceptions(models.Model):
         return self.appid
 
 
-# class backuparchives_raw(models.Model):
-#     appid = models.IntegerField()
-#     boid = models.IntegerField()
-#     bsid = models.IntegerField()
-#     file_name = models.CharField(max_length=1000)
-#     file_size = models.IntegerField()
-#     status = models.CharField(max_length=24)
-#     handle_raw = models.CharField(max_length=200)
-#     last_seen = models.DateField()
-#
-#     class Meta:
-#         db_table = 'backuparchives_raw'
-#
-#     def __str__(self):
-#         return self.appid
+# TODO check for the handle_raw datatype again
+class backuparchives_raw(models.Model):
+    appid = models.IntegerField()
+    boid = models.IntegerField()
+    bsid = models.IntegerField()
+    file_name = models.CharField(max_length=1000)
+    file_size = models.IntegerField()
+    status = models.CharField(max_length=24)
+    handle_raw = models.CharField(max_length=200)
+    last_seen = models.DateField()
+
+    class Meta:
+        db_table = 'backuparchives_raw'
+
+    def __str__(self):
+        return self.appid
 
 class backuparchives(models.Model):
     appid = models.IntegerField()
