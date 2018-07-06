@@ -21,7 +21,7 @@ from hadoop_backup_catalog import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^metadata/', views.MetadataList.as_view()),
-    url(r'^applications/', views.ApplicationList.as_view()),
+    url(r'^applications/(?P<appid>[\d]+)/$', views.ApplicationList.as_view()),
     url(r'^backupsets/', views.BackupsetsList.as_view()),
     url(r'^backup-operations/', views.BackupoperationsList.as_view()),
     url(r'^backupfile-exception/', views.BackupfileExceptionsList.as_view()),

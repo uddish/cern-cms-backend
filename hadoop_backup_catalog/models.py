@@ -45,14 +45,14 @@ class backupsets(models.Model):
 
 
 class backupoperations(models.Model):
-    appid = models.IntegerField()
-    boid = models.IntegerField()
+    appid = models.IntegerField(null=True)
+    boid = models.IntegerField(null=True)
     backup_type = models.CharField(max_length=9)
-    last_backup_timestamp = models.DateField()
-    num_archives = models.IntegerField()
-    start_time = models.DateField()
-    completion_time = models.DateField()
-    elapsed_seconds = models.IntegerField()
+    last_backup_timestamp = models.DateField(null=True)
+    num_archives = models.IntegerField(null=True)
+    start_time = models.DateField(null=True)
+    completion_time = models.DateField(null=True)
+    elapsed_seconds = models.IntegerField(null=True)
     status = models.CharField(max_length=24)
 
     class Meta:
@@ -87,10 +87,10 @@ class backuparchives_raw(models.Model):
     boid = models.IntegerField()
     bsid = models.IntegerField()
     file_name = models.CharField(max_length=1000)
-    file_size = models.IntegerField()
+    file_size = models.IntegerField(null=True)
     status = models.CharField(max_length=24)
-    handle_raw = models.CharField(max_length=200)
-    last_seen = models.DateField()
+    handle_raw = models.TextField(null=True)
+    last_seen = models.DateField(null=True)
 
     class Meta:
         db_table = 'backuparchives_raw'

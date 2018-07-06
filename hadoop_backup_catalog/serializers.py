@@ -19,39 +19,39 @@ class BackupsetsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = backupsets
-        field = '__all__'
+        fields = '__all__'
 
 
 class BackupoperationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = backupoperations
-        field = '__all__'
+        fields = '__all__'
 
 
 class BackupfileExceptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = backupfile_exceptions
-        field = '__all__'
+        fields = '__all__'
 
 
 class BackuparchivesRawSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = backuparchives_raw
-        field = '__all__'
+        fields = '__all__'
 
 
 class BackuparchivesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = backuparchives
-        field = '__all__'
+        fields = '__all__'
 
 
 class ExclusionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = exclusion_list
-        field = '__all__'
+        fields = '__all__'

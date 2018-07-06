@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list
 from .serializers import MetadataSerializer, ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, ExclusionListSerializer
-
+from .pagination import BackupArchiveRawPagination
 
 # Metadata api
 class MetadataList(APIView):
@@ -20,8 +20,10 @@ class MetadataList(APIView):
 #Applications api
 class ApplicationList(APIView):
 
-    def get(self, request):
-        data = applications.objects.all()
+    def get(self, request, *args, **kwargs):
+        # data = applications.objects.all()
+        appid = kwargs['appid']
+        data = applications.objects.filter(appid=appid)
         serializer = ApplicationsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -63,7 +65,7 @@ class BackupfileExceptionsList(APIView):
 
 
 class BackuparchivesRawList(APIView):
-
+    pagination_class = BackupArchiveRawPagination
     def get(self, request):
         data = backuparchives_raw.objects.all()
         serializer = BackuparchivesRawSerializer(data, many=True)
