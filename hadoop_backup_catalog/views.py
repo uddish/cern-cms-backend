@@ -33,8 +33,9 @@ class ApplicationList(APIView):
 
 class BackupsetsList(APIView):
 
-    def get(self, request):
-        data = backupsets.objects.all()
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
+        data = backupsets.objects.filter(appid=appid)[0:5]
         serializer = BackupsetsSerializer(data, many=True)
         return Response(serializer.data)
 
