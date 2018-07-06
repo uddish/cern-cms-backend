@@ -67,8 +67,9 @@ class BackupfileExceptionsList(APIView):
 
 class BackuparchivesRawList(APIView):
     pagination_class = BackupArchiveRawPagination
-    def get(self, request):
-        data = backuparchives_raw.objects.all()
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
+        data = backuparchives_raw.objects.filter(appid=appid)[0:5]
         serializer = BackuparchivesRawSerializer(data, many=True)
         return Response(serializer.data)
 
