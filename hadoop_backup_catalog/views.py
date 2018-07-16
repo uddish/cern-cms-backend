@@ -6,8 +6,8 @@ from .serializers import MetadataSerializer, \
     ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, \
     BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, \
     ExclusionListSerializer
-from .pagination import BackupArchiveRawPagination, BackupArchiveRawOffset
-from rest_framework import generics
+from .pagination import BackupArchiveRawPagination, BackupSetsPagination
+from rest_framework.generics import ListAPIView
 
 
 # Metadata api
@@ -26,7 +26,6 @@ class MetadataList(APIView):
 class ApplicationList(APIView):
 
     def get(self, request, *args, **kwargs):
-        # data = applications.objects.all()
         appid = kwargs['appid']
         data = applications.objects.filter(appid=appid)
         serializer = ApplicationsSerializer(data, many=True)
@@ -36,15 +35,14 @@ class ApplicationList(APIView):
         pass
 
 
-class BackupsetsList(APIView):
-    def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = backupsets.objects.filter(appid=appid)[0:5]
-        serializer = BackupsetsSerializer(data, many=True)
-        return Response(serializer.data)
+class BackupsetsList(ListAPIView):
+    serializer_class = BackupsetsSerializer
+    pagination_class = BackupSetsPagination
 
-    def post(self):
-        pass
+    def get_queryset(self):
+        appid = self.kwargs['appid']
+        data = backupsets.objects.filter(appid=appid)
+        return data
 
 
 class BackupoperationsList(APIView):
@@ -70,17 +68,15 @@ class BackupfileExceptionsList(APIView):
         pass
 
 
-class BackuparchivesRawList(generics.ListCreateAPIView):
-    pagination_class = BackupArchiveRawPagination
-    serializer_class = BackuparchivesRawSerializer
-    queryset = backuparchives_raw.objects.all()[0:1]
+class BackuparchivesRawList(APIView):
+    # pagination_class = BackupArchiveRawPagination
     def get(self, request, *args, **kwargs):
         appid = kwargs['appid']
-        data = backuparchives_raw.objects.filter(appid=appid)
+        data = backuparchives_raw.objects.filter(appid=appid)[0:5]
         serializer = BackuparchivesRawSerializer(data, many=True)
         return Response(serializer.data)
 
-    def post(self, **kwargs):
+    def post(self):
         pass
 
 class BackuparchivesList(APIView):

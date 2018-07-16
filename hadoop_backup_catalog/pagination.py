@@ -1,10 +1,10 @@
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
+
 
 class BackupArchiveRawPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
-    max_page_size = 1000
+    max_page_size = 50
 
-class BackupArchiveRawOffset(LimitOffsetPagination):
-    default_limit = 5
-    max_limit = 10
+class BackupSetsPagination(PageNumberPagination):
+    page_size = 10
