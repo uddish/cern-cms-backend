@@ -6,7 +6,7 @@ from .serializers import MetadataSerializer, \
     ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, \
     BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, \
     ExclusionListSerializer
-from .pagination import BackupArchiveRawPagination, BackupSetsPagination
+from .pagination import BackupArchiveRawPagination, BackupSetsPagination, BackupOperationsPagination
 from rest_framework.generics import ListAPIView
 
 
@@ -45,16 +45,24 @@ class BackupsetsList(ListAPIView):
         return data
 
 
-class BackupoperationsList(APIView):
+class BackuparchivesRawList(ListAPIView):
+    pagination_class = BackupArchiveRawPagination
+    serializer_class = BackuparchivesRawSerializer
 
-    def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = backupoperations.objects.filter(appid=appid)[0:5]
-        serializer = BackupoperationsSerializer(data, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        appid = self.kwargs['appid']
+        data = backuparchives_raw.objects.filter(appid=appid)
+        return data
 
-    def post(self):
-        pass
+
+class BackupoperationsList(ListAPIView):
+    pagination_class = BackupOperationsPagination
+    serializer_class = BackupoperationsSerializer
+
+    def get_queryset(self):
+        appid = self.kwargs['appid']
+        data = backupoperations.objects.filter(appid=appid)
+        return data
 
 
 class BackupfileExceptionsList(APIView):
@@ -67,17 +75,6 @@ class BackupfileExceptionsList(APIView):
     def post(self):
         pass
 
-
-class BackuparchivesRawList(APIView):
-    # pagination_class = BackupArchiveRawPagination
-    def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = backuparchives_raw.objects.filter(appid=appid)[0:5]
-        serializer = BackuparchivesRawSerializer(data, many=True)
-        return Response(serializer.data)
-
-    def post(self):
-        pass
 
 class BackuparchivesList(APIView):
 
