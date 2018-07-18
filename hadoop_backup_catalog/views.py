@@ -89,8 +89,9 @@ class BackuparchivesList(APIView):
 
 class ExclusionList(APIView):
 
-    def get(self, request):
-        data = exclusion_list.objects.all()
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
+        data = exclusion_list.objects.filter(appid=appid)
         serializer = ExclusionListSerializer(data, many=True)
         return Response(serializer.data)
 
