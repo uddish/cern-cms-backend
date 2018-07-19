@@ -59,7 +59,7 @@ class backupoperations(models.Model):
         db_table = 'backupoperations'
 
     def __str__(self):
-        return self.appid
+        return str(self.appid)
 
 
 class backupfile_exceptions(models.Model):

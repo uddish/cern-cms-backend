@@ -65,6 +65,18 @@ class BackupoperationsList(ListAPIView):
         return data
 
 
+class LatestBackupOperation(APIView):
+
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
+        data = backupoperations.objects.filter(appid=appid, status='COMPLETED').order_by('-last_backup_timestamp')[:1]
+        serializer = BackupoperationsSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self):
+        pass
+
+
 class BackupfileExceptionsList(APIView):
 
     def get(self, request):

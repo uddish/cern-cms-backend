@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^applications/(?P<appid>[\d]+)/$', views.ApplicationList.as_view()),
     url(r'^backupsets/(?P<appid>[\d]+)/$', views.BackupsetsList.as_view()),
     url(r'^backup-operations/(?P<appid>[\d]+)/$', views.BackupoperationsList.as_view()),
+    url(r'^backup-operations/(?P<appid>[\d]+)/latest_backup/$', views.LatestBackupOperation.as_view()),
     url(r'^backupfile-exception/', views.BackupfileExceptionsList.as_view()),
     url(r'^backuparchives-raw/(?P<appid>[\d]+)/$', views.BackuparchivesRawList.as_view()),
     url(r'^backuparchives/', views.BackuparchivesList.as_view()),
