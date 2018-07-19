@@ -48,10 +48,10 @@ class backupoperations(models.Model):
     appid = models.IntegerField(null=True)
     boid = models.IntegerField(null=True)
     backup_type = models.CharField(max_length=9)
-    last_backup_timestamp = models.DateField(null=True)
+    last_backup_timestamp = models.DateTimeField(null=True)
     num_archives = models.IntegerField(null=True)
-    start_time = models.DateField(null=True)
-    completion_time = models.DateField(null=True)
+    start_time = models.DateTimeField(null=True)
+    completion_time = models.DateTimeField(null=True)
     elapsed_seconds = models.IntegerField(null=True)
     status = models.CharField(max_length=24)
 
