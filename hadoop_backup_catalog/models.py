@@ -126,3 +126,23 @@ class exclusion_list(models.Model):
 
     def __str__(self):
         return self.appid
+
+class backup_recovery(models.Model):
+    username = models.CharField(max_length=60)
+    cluster_name = models.CharField(max_length=60)
+    application_name = models.CharField(max_length=60)
+    list_of_files = models.CharField(max_length=60)
+    recovery_timestamp = models.DateTimeField(null=True)
+    requested_timestamp = models.DateTimeField(null=True)
+    status = models.CharField(max_length=25)
+    recovery_state = models.CharField(max_length=25)
+    recovery_job_id = models.IntegerField()
+    recovery_start_time = models.DateTimeField(null=True)
+    recovery_end_time = models.DateTimeField(null=True)
+    staging_directory = models.CharField(max_length=60)
+
+    class Meta:
+        db_table = 'backup_recovery'
+
+    def __str__(self):
+        return self.application_name

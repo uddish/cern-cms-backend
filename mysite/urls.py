@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^backuparchives-raw/(?P<appid>[\d]+)/$', views.BackuparchivesRawList.as_view()),
     url(r'^backuparchives/', views.BackuparchivesList.as_view()),
     url(r'^exclusion-list/(?P<appid>[\d]+)/$', views.ExclusionList.as_view()),
+    url(r'^backup-recovery/', views.BackupRecovery.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

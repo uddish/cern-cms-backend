@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list
+from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list, backup_recovery
 
 class MetadataSerializer(serializers.ModelSerializer):
 
@@ -54,4 +54,11 @@ class ExclusionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = exclusion_list
+        fields = '__all__'
+
+
+class BackupRecoverySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = backup_recovery
         fields = '__all__'

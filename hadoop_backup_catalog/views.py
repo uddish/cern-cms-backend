@@ -1,13 +1,14 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list
+from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list, backup_recovery
 from .serializers import MetadataSerializer, \
     ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, \
     BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, \
-    ExclusionListSerializer
+    ExclusionListSerializer, BackupRecoverySerializer
 from .pagination import BackupArchiveRawPagination, BackupSetsPagination, BackupOperationsPagination
 from rest_framework.generics import ListAPIView
+from rest_framework import status
 
 
 # Metadata api
@@ -109,3 +110,18 @@ class ExclusionList(APIView):
 
     def post(self):
         pass
+
+
+class BackupRecovery(APIView):
+
+    def get(self, request):
+        data = backup_recovery.objects.all()
+        serializer = BackupRecoverySerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = BackupRecoverySerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
