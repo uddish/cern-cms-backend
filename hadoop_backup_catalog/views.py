@@ -64,7 +64,7 @@ class BackupoperationsList(APIView):
 
     def get(self, request, *args, **kwargs):
         appid = kwargs['appid']
-        data = backupoperations.objects.filter(appid=appid)
+        data = backupoperations.objects.order_by('-last_backup_timestamp').filter(appid=appid)
         serializer = BackupoperationsSerializer(data, many=True)
         return Response(serializer.data)
 
