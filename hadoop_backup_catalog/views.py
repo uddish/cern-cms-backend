@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions,backuparchives_raw, backuparchives, exclusion_list, backup_recovery
+from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions, backuparchives_raw, \
+    backuparchives, exclusion_list, backup_recovery
 from .serializers import MetadataSerializer, \
     ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, \
     BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, \
@@ -23,7 +24,7 @@ class MetadataList(APIView):
         pass
 
 
-#Applications api
+# Applications api
 class ApplicationList(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -36,14 +37,17 @@ class ApplicationList(APIView):
         pass
 
 
-class BackupsetsList(ListAPIView):
-    serializer_class = BackupsetsSerializer
-    pagination_class = BackupSetsPagination
+class BackupsetsList(APIView):
 
-    def get_queryset(self):
-        appid = self.kwargs['appid']
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
+        #Username = kwargs['username']
         data = backupsets.objects.filter(appid=appid)
-        return data
+        serializer = BackupsetsSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self):
+        pass
 
 
 class BackuparchivesRawList(ListAPIView):
@@ -56,14 +60,16 @@ class BackuparchivesRawList(ListAPIView):
         return data
 
 
-class BackupoperationsList(ListAPIView):
-    pagination_class = BackupOperationsPagination
-    serializer_class = BackupoperationsSerializer
+class BackupoperationsList(APIView):
 
-    def get_queryset(self):
-        appid = self.kwargs['appid']
+    def get(self, request, *args, **kwargs):
+        appid = kwargs['appid']
         data = backupoperations.objects.filter(appid=appid)
-        return data
+        serializer = BackupoperationsSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self):
+        pass
 
 
 class LatestBackupOperation(APIView):
@@ -120,7 +126,7 @@ class BackupRecovery(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = BackupRecoverySerializer(data = request.data)
+        serializer = BackupRecoverySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

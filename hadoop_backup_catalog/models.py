@@ -134,12 +134,12 @@ class backup_recovery(models.Model):
     list_of_files = models.CharField(max_length=60)
     recovery_timestamp = models.DateTimeField(null=True)
     requested_timestamp = models.DateTimeField(null=True)
-    status = models.CharField(max_length=25)
-    recovery_state = models.CharField(max_length=25)
+    status = models.CharField(max_length=25, null=True)
+    recovery_state = models.CharField(max_length=25, null=True)
     recovery_job_id = models.IntegerField()
     recovery_start_time = models.DateTimeField(null=True)
     recovery_end_time = models.DateTimeField(null=True)
-    staging_directory = models.CharField(max_length=60)
+    staging_directory = models.CharField(max_length=60, null=True)
 
     class Meta:
         db_table = 'backup_recovery'
