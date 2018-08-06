@@ -121,7 +121,7 @@ class ExclusionList(APIView):
 class BackupRecovery(APIView):
 
     def get(self, request):
-        data = backup_recovery.objects.all()
+        data = backup_recovery.objects.order_by('-requested_timestamp').all()
         serializer = BackupRecoverySerializer(data, many=True)
         return Response(serializer.data)
 
