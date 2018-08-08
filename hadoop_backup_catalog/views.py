@@ -28,21 +28,23 @@ class MetadataList(APIView):
 class ApplicationList(APIView):
 
     def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = applications.objects.filter(appid=appid)
+        username = kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = applications.objects.filter(appid=appid[0].get('appid'))
         serializer = ApplicationsSerializer(data, many=True)
         return Response(serializer.data)
 
-    def post(self):
-        pass
+
+def post(self):
+    pass
 
 
 class BackupsetsList(APIView):
 
     def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        #Username = kwargs['username']
-        data = backupsets.objects.filter(appid=appid)
+        username = kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = backupsets.objects.filter(appid=appid[0].get('appid'))
         serializer = BackupsetsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -55,16 +57,18 @@ class BackuparchivesRawList(ListAPIView):
     serializer_class = BackuparchivesRawSerializer
 
     def get_queryset(self):
-        appid = self.kwargs['appid']
-        data = backuparchives_raw.objects.filter(appid=appid)
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = backuparchives_raw.objects.filter(appid=appid[0].get('appid'))
         return data
 
 
 class BackupoperationsList(APIView):
 
     def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = backupoperations.objects.order_by('-last_backup_timestamp').filter(appid=appid)
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = backupoperations.objects.order_by('-last_backup_timestamp').filter(appid=appid[0].get('appid'))
         serializer = BackupoperationsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -75,8 +79,9 @@ class BackupoperationsList(APIView):
 class LatestBackupOperation(APIView):
 
     def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = backupoperations.objects.filter(appid=appid, status='COMPLETED').order_by('-last_backup_timestamp')[:1]
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = backupoperations.objects.filter(appid=appid[0].get('appid'), status='COMPLETED').order_by('-last_backup_timestamp')[:1]
         serializer = BackupoperationsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -109,8 +114,9 @@ class BackuparchivesList(APIView):
 class ExclusionList(APIView):
 
     def get(self, request, *args, **kwargs):
-        appid = kwargs['appid']
-        data = exclusion_list.objects.filter(appid=appid)
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = exclusion_list.objects.filter(appid=appid[0].get('appid'))
         serializer = ExclusionListSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -120,8 +126,9 @@ class ExclusionList(APIView):
 
 class BackupRecovery(APIView):
 
-    def get(self, request):
-        data = backup_recovery.objects.order_by('-requested_timestamp').all()
+    def get(self, request, *args, **kwargs):
+        username = self.kwargs['username']
+        data = backup_recovery.objects.filter(username=username).order_by('-requested_timestamp')
         serializer = BackupRecoverySerializer(data, many=True)
         return Response(serializer.data)
 

@@ -13,6 +13,7 @@ class applications(models.Model):
     servicecontact_email = models.CharField(max_length=50)
     hdfs_stage = models.CharField(max_length=50)
     age = models.IntegerField()
+    username = models.CharField(max_length=30)
 
     def __str__(self):
         return self.appname
@@ -81,7 +82,6 @@ class backupfile_exceptions(models.Model):
         return self.appid
 
 
-# TODO check for the handle_raw datatype again
 class backuparchives_raw(models.Model):
     appid = models.IntegerField()
     boid = models.IntegerField()
@@ -136,7 +136,7 @@ class backup_recovery(models.Model):
     requested_timestamp = models.DateTimeField(null=True)
     status = models.CharField(max_length=25, null=True)
     recovery_state = models.CharField(max_length=25, null=True)
-    recovery_job_id = models.IntegerField()
+    recovery_job_id = models.IntegerField(null=True)
     recovery_start_time = models.DateTimeField(null=True)
     recovery_end_time = models.DateTimeField(null=True)
     staging_directory = models.CharField(max_length=60, null=True)

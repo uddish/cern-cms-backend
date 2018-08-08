@@ -21,15 +21,15 @@ from hadoop_backup_catalog import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^metadata/', views.MetadataList.as_view()),
-    url(r'^applications/(?P<appid>[\d]+)/$', views.ApplicationList.as_view()),
-    url(r'^backupsets/(?P<appid>[\d]+)/$', views.BackupsetsList.as_view()),
-    url(r'^backup-operations/(?P<appid>[\d]+)/$', views.BackupoperationsList.as_view()),
-    url(r'^backup-operations/(?P<appid>[\d]+)/latest_backup/$', views.LatestBackupOperation.as_view()),
+    url(r'^applications/(?P<username>[\w]+)/$', views.ApplicationList.as_view()),
+    url(r'^backupsets/(?P<username>[\w]+)/$', views.BackupsetsList.as_view()),
+    url(r'^backup-operations/(?P<username>[\w]+)/$', views.BackupoperationsList.as_view()),
+    url(r'^backup-operations/(?P<username>[\w]+)/latest_backup/$', views.LatestBackupOperation.as_view()),
     url(r'^backupfile-exception/', views.BackupfileExceptionsList.as_view()),
-    url(r'^backuparchives-raw/(?P<appid>[\d]+)/$', views.BackuparchivesRawList.as_view()),
+    url(r'^backuparchives-raw/(?P<username>[\w]+)/$', views.BackuparchivesRawList.as_view()),
     url(r'^backuparchives/', views.BackuparchivesList.as_view()),
-    url(r'^exclusion-list/(?P<appid>[\d]+)/$', views.ExclusionList.as_view()),
-    url(r'^backup-recovery/', views.BackupRecovery.as_view())
+    url(r'^exclusion-list/(?P<username>[\w]+)/$', views.ExclusionList.as_view()),
+    url(r'^backup-recovery/(?P<username>[\w]+)/$', views.BackupRecovery.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
