@@ -132,7 +132,7 @@ class BackupRecovery(APIView):
         serializer = BackupRecoverySerializer(data, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = BackupRecoverySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
