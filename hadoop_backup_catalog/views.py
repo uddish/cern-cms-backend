@@ -1,12 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import metadata, applications, backupsets, backupoperations, backupfile_exceptions, backuparchives_raw, \
-    backuparchives, exclusion_list, backup_recovery
-from .serializers import MetadataSerializer, \
-    ApplicationsSerializer, BackupsetsSerializer, BackupoperationsSerializer, \
-    BackupfileExceptionsSerializer, BackuparchivesRawSerializer, BackuparchivesSerializer, \
-    ExclusionListSerializer, BackupRecoverySerializer
+from .models import *
+from .serializers import *
 from .pagination import BackupArchiveRawPagination, BackupSetsPagination, BackupOperationsPagination
 from rest_framework.generics import ListAPIView
 from rest_framework import status
@@ -138,3 +134,13 @@ class BackupRecovery(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BackupReports(APIView):
+
+    def get(self, request, *args, **kwargs):
+        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,num_files '
+                                            'from backupoperations bo, backupsets bs where bo.appid=3 and bo.appid=bs.appid and bo.boid=bs.boid '
+                                            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files')
+        serializer = BackupReportsSerializer(data, many=True)
+        return Response(serializer.data)

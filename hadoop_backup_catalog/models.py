@@ -42,7 +42,7 @@ class backupsets(models.Model):
         db_table = 'backupsets'
 
     def __str__(self):
-        return self.appid
+        return self.backupset_name
 
 
 class backupoperations(models.Model):
@@ -126,6 +126,7 @@ class exclusion_list(models.Model):
 
     def __str__(self):
         return self.appid
+
 
 class backup_recovery(models.Model):
     username = models.CharField(max_length=60)
