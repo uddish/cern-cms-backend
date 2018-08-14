@@ -139,8 +139,10 @@ class BackupRecovery(APIView):
 class BackupReports(APIView):
 
     def get(self, request, *args, **kwargs):
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
         data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,num_files '
-                                            'from backupoperations bo, backupsets bs where bo.appid=3 and bo.appid=bs.appid and bo.boid=bs.boid '
-                                            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files')
+                                            'from backupoperations bo, backupsets bs where bo.appid = %s and bo.appid=bs.appid and bo.boid=bs.boid '
+                                            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files order by last_backup_timestamp desc', [appid[0].get('appid')])[:30]
         serializer = BackupReportsSerializer(data, many=True)
         return Response(serializer.data)

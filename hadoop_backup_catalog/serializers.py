@@ -65,7 +65,6 @@ class BackupRecoverySerializer(serializers.ModelSerializer):
 
 class BackupReportsSerializer(serializers.Serializer):
     appid = serializers.IntegerField()
-    boid = serializers.IntegerField()
     last_backup_timestamp = serializers.DateTimeField()
     num_files = serializers.IntegerField()
 
