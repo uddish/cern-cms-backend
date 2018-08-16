@@ -30,10 +30,21 @@ class ApplicationList(APIView):
         serializer = ApplicationsSerializer(data, many=True)
         return Response(serializer.data)
 
+    def post(self):
+        pass
 
-def post(self):
-    pass
 
+class UsernameFromApplication(APIView):
+
+    def get(self, request, *args, **kwargs):
+        appname = kwargs['appname']
+        appid = applications.objects.filter(appname=appname).values('appid')
+        data = applications.objects.filter(appid=appid[0].get('appid'))
+        serializer = UsernameFromAppnameSerializer(data, many=True)
+        return Response(serializer.data)
+
+    def post(self):
+        pass
 
 class BackupsetsList(APIView):
 

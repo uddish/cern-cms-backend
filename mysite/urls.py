@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^backuparchives/', views.BackuparchivesList.as_view()),
     url(r'^exclusion-list/(?P<username>[\w]+)/$', views.ExclusionList.as_view()),
     url(r'^backup-recovery/(?P<username>[\w]+)/$', views.BackupRecovery.as_view()),
-    url(r'^backup-reports/(?P<username>[\w]+)/$', views.BackupReports.as_view())
+    url(r'^backup-reports/(?P<username>[\w]+)/$', views.BackupReports.as_view()),
+    url(r'^get-username/(?P<appname>[\w]+)/$', views.UsernameFromApplication.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

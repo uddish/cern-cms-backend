@@ -68,3 +68,10 @@ class BackupReportsSerializer(serializers.Serializer):
     last_backup_timestamp = serializers.DateTimeField()
     num_files = serializers.IntegerField()
 
+
+class UsernameFromAppnameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = applications
+        fields = '__all__'
+
