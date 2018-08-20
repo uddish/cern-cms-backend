@@ -69,6 +69,11 @@ class BackupReportsSerializer(serializers.Serializer):
     num_files = serializers.IntegerField()
 
 
+class BackupReportsVolumeSerializer(serializers.Serializer):
+    appid = serializers.IntegerField()
+    last_backup_timestamp = serializers.DateTimeField()
+    file_size = serializers.IntegerField()
+
 class UsernameFromAppnameSerializer(serializers.ModelSerializer):
 
     class Meta:

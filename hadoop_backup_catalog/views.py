@@ -147,13 +147,27 @@ class BackupRecovery(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BackupReports(APIView):
+class BackupReportsNoOfFiles(APIView):
 
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
-        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,num_files '
+        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(num_files) as num_files '
                                             'from backupoperations bo, backupsets bs where bo.appid = %s and bo.appid=bs.appid and bo.boid=bs.boid '
                                             'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files order by last_backup_timestamp desc', [appid[0].get('appid')])[:30]
         serializer = BackupReportsSerializer(data, many=True)
         return Response(serializer.data)
+
+
+class BackupReportsVolume(APIView):
+
+    def get(self, request, *args, **kwargs):
+        username = self.kwargs['username']
+        appid = applications.objects.filter(username=username).values('appid')
+        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(file_size) as file_size '
+                                            'from backupoperations bo, backuparchives_raw ba '
+                                            'where bo.appid = %s and bo.appid=ba.appid and bo.boid=ba.boid '
+                                            'group by bo.id, bo.appid,bo.boid,last_backup_timestamp, file_size, file_size', [appid[0].get('appid')])[:30]
+        serializer = BackupReportsVolumeSerializer(data, many=True)
+        return Response(serializer.data)
+
