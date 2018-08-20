@@ -26,6 +26,11 @@ class ApplicationList(APIView):
     def get(self, request, *args, **kwargs):
         username = kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
         data = applications.objects.filter(appid=appid[0].get('appid'))
         serializer = ApplicationsSerializer(data, many=True)
         return Response(serializer.data)
@@ -46,11 +51,17 @@ class UsernameFromApplication(APIView):
     def post(self):
         pass
 
+
 class BackupsetsList(APIView):
 
     def get(self, request, *args, **kwargs):
         username = kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
         data = backupsets.objects.filter(appid=appid[0].get('appid'))
         serializer = BackupsetsSerializer(data, many=True)
         return Response(serializer.data)
@@ -66,7 +77,14 @@ class BackuparchivesRawList(ListAPIView):
     def get_queryset(self):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
-        data = backuparchives_raw.objects.filter(appid=appid[0].get('appid'))
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+            data = backuparchives_raw.objects.filter(appid=appid[0].get('appid'), file_name__startswith='/user/'+username)
+        else:
+            data = backuparchives_raw.objects.filter(appid=appid[0].get('appid'))
+
         return data
 
 
@@ -75,6 +93,11 @@ class BackupoperationsList(APIView):
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
         data = backupoperations.objects.order_by('-last_backup_timestamp').filter(appid=appid[0].get('appid'))
         serializer = BackupoperationsSerializer(data, many=True)
         return Response(serializer.data)
@@ -88,7 +111,13 @@ class LatestBackupOperation(APIView):
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
-        data = backupoperations.objects.filter(appid=appid[0].get('appid'), status='COMPLETED').order_by('-last_backup_timestamp')[:1]
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
+        data = backupoperations.objects.filter(appid=appid[0].get('appid'), status='COMPLETED').order_by(
+            '-last_backup_timestamp')[:1]
         serializer = BackupoperationsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -123,6 +152,11 @@ class ExclusionList(APIView):
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
         data = exclusion_list.objects.filter(appid=appid[0].get('appid'))
         serializer = ExclusionListSerializer(data, many=True)
         return Response(serializer.data)
@@ -152,9 +186,16 @@ class BackupReportsNoOfFiles(APIView):
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
-        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(num_files) as num_files '
-                                            'from backupoperations bo, backupsets bs where bo.appid = %s and bo.appid=bs.appid and bo.boid=bs.boid '
-                                            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files order by last_backup_timestamp desc', [appid[0].get('appid')])[:30]
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
+        data = backupoperations.objects.raw(
+            'select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(num_files) as num_files '
+            'from backupoperations bo, backupsets bs where bo.appid = %s and bo.appid=bs.appid and bo.boid=bs.boid '
+            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files order by last_backup_timestamp desc',
+            [appid[0].get('appid')])[:30]
         serializer = BackupReportsSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -164,10 +205,16 @@ class BackupReportsVolume(APIView):
     def get(self, request, *args, **kwargs):
         username = self.kwargs['username']
         appid = applications.objects.filter(username=username).values('appid')
-        data = backupoperations.objects.raw('select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(file_size) as file_size '
-                                            'from backupoperations bo, backuparchives_raw ba '
-                                            'where bo.appid = %s and bo.appid=ba.appid and bo.boid=ba.boid '
-                                            'group by bo.id, bo.appid,bo.boid,last_backup_timestamp, file_size, file_size', [appid[0].get('appid')])[:30]
+
+        # if the user is a light user, map it to a static appid
+        if not appid:
+            appid = applications.objects.filter(username='luser').values('appid')
+
+        data = backupoperations.objects.raw(
+            'select bo.id, bo.appid,bo.boid,last_backup_timestamp,sum(file_size) as file_size '
+            'from backupoperations bo, backuparchives_raw ba '
+            'where bo.appid = %s and bo.appid=ba.appid and bo.boid=ba.boid '
+            'group by bo.id, bo.appid,bo.boid,last_backup_timestamp, file_size, file_size', [appid[0].get('appid')])[
+               :30]
         serializer = BackupReportsVolumeSerializer(data, many=True)
         return Response(serializer.data)
-
