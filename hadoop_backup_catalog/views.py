@@ -181,6 +181,7 @@ class BackupRecovery(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Backup Reports Views
 class BackupReportsNoOfFiles(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -219,7 +220,7 @@ class BackupReportsVolume(APIView):
         serializer = BackupReportsVolumeSerializer(data, many=True)
         return Response(serializer.data)
 
-
+# Admin Reports Views
 class AdminReportsOperations(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -231,8 +232,9 @@ class AdminReportsOperations(APIView):
             '(select distinct appid, max(last_backup_timestamp), appname '
             'from backupoperations group by appid) and bo.appid=bs.appid '
             'and bo.boid=bs.boid and bo.appid=ap.appid '
-            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, num_files, appname'
+            'group by bo.id,bo.appid,bo.boid,last_backup_timestamp, appname'
           )
 
         serializer = AdminReportsOperationsSerializer(data, many=True)
         return Response(serializer.data)
+

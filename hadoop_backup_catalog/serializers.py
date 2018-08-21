@@ -82,4 +82,3 @@ class AdminReportsOperationsSerializer(serializers.Serializer):
     appname = serializers.CharField()
 
 
-
