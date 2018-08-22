@@ -238,3 +238,19 @@ class AdminReportsOperations(APIView):
         serializer = AdminReportsOperationsSerializer(data, many=True)
         return Response(serializer.data)
 
+
+class AdminReportsVolume(APIView):
+
+    def get(self, request, *args, **kwargs):
+        data = backupoperations.objects.raw(
+            'select bo.id, bo.appid,bo.boid,last_backup_timestamp, appname, sum(file_size)'
+            ' as file_size from backupoperations bo, backuparchives_raw ba,'
+            ' hadoop_backup_catalog_appl12a8 ap where (bo.appid,bo.last_backup_timestamp, appname)'
+            ' in (select distinct appid, max(last_backup_timestamp), appname from backupoperations group by appid)'
+            ' and bo.appid=ba.appid and bo.boid=ba.boid and bo.appid=ap.appid'
+            ' group by bo.id, bo.appid,bo.boid,last_backup_timestamp, appname'
+          )
+
+        serializer = AdminReportsVolumeSerializer(data, many=True)
+        return Response(serializer.data)
+

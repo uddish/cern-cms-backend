@@ -82,3 +82,10 @@ class AdminReportsOperationsSerializer(serializers.Serializer):
     appname = serializers.CharField()
 
 
+class AdminReportsVolumeSerializer(serializers.Serializer):
+    appid = serializers.IntegerField()
+    last_backup_timestamp = serializers.DateTimeField()
+    file_size = serializers.IntegerField()
+    appname = serializers.CharField()
+
+

@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^backup-reports/(?P<username>[\w]+)/$', views.BackupReportsNoOfFiles.as_view()),
     url(r'^backup-reports-volume/(?P<username>[\w]+)/$', views.BackupReportsVolume.as_view()),
     url(r'^admin-reports-operations/', views.AdminReportsOperations.as_view()),
+    url(r'^admin-reports-volume/', views.AdminReportsVolume.as_view()),
     url(r'^get-username/(?P<appname>[\w]+)/$', views.UsernameFromApplication.as_view())
 ]
 
